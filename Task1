@@ -9,11 +9,11 @@ class KinematicCar {
 private:
 	double L = 1.5;
 	double dt = 0.5;
-public:
 	double X;
 	double Y;
 	double yaw;
 	double v;
+public:
 	KinematicCar(double x = 0, double y = 0, double angle = 0,double speed = 0) {
 		X = x;
 		Y = y;
