@@ -14,7 +14,7 @@ private:
 	int Crr = 200;
 	float Cd = 1.53;
 	int Cbf = 5411, Cbr = 2650;
-	int Cx = 20000;
+	int Cx = -20000;
 	double dt = 0.001;
 	const double PI = 3.141592653589793238463;
 
@@ -45,7 +45,7 @@ public:
 		if (vx != 0) {af = atan((vy + lf * r) / vx) - SteeringAngle; } 
 		else { af = 0; };
 		double Ffy = Cx * af;
-		double Fx = Fdrv - Frrr - Fbr - Frrf * cos(SteeringAngle) - Fbf * cos(SteeringAngle) - Ffy * sin(SteeringAngle) + (m * vy * r);
+		double Fx = Fdrv - Fdrag - Frrr - Fbr - Frrf * cos(SteeringAngle) - Fbf * cos(SteeringAngle) - Ffy * sin(SteeringAngle) + (m * vy * r);
 		return Fx / m;
 	};
 	double ay(double Throttle, double SteeringAngle, double brakes) {
@@ -71,9 +71,11 @@ public:
 		else { ar = 0; };
 		double Ffy = Cx * af;
 		double Fry = Cx * ar; 
-		double Frrf = Crr * tanh(vx);
-		double Fbf = brakes * Cbf * tanh(vx);
+		//double Frrf = Crr * tanh(vx);
+		//double Fbf = brakes * Cbf * tanh(vx);
+		//double M = Ffy * lf * cos(SteeringAngle) - Frrf * lf * sin(SteeringAngle) - Fbf * lf * sin(SteeringAngle) - Fry * lr; 
 		double M = (Ffy * lf * cos(SteeringAngle))  - (Fry * lr); 
+		//cout << M << endl << M1 << endl << endl;
 		return M / lz;
 	};
 	void MoveCar(double Throttle, double SteeringAngle, double brakes) {
@@ -106,10 +108,10 @@ int main() {
 		for (int j = 0; j < (0.05 / 0.001); j++) {
 			MyCar.MoveCar(stod(s1), stod(s2), stod(s3));
 		}; 
-		//MyCar.printFields();
+		MyCar.printFields();
 	};
 	cout << endl;
-	MyCar.printFields();
+	//MyCar.printFields();
 
 	file.close();
 
