@@ -35,34 +35,34 @@ public:
 		
 	};
 	double ax(double Throttle, double SteeringAngle, double brakes) {
-		double Fdrv = Throttle * Cm * Throttle;
+		double Fdrv = Throttle * Cm;
 		double Fbf = brakes * Cbf * tanh(vx); 
 		double Fbr = brakes * Cbr * tanh(vx); 
 		double Frrr = Crr * tanh(vx);
 		double Frrf = Crr * tanh(vx);
 		double Fdrag = Cd * vx * vx;
 		double af;
-		if (vx != 0) { af = abs((lf * r - vx) / vx); }
+		if (vx != 0) {af = atan((vy + lf * r) / vx) - SteeringAngle; } 
 		else { af = 0; };
 		double Ffy = Cx * af;
-		double Fx = Fdrv - Frrr - Fbr - Frrf * cos(SteeringAngle) - Fbf * cos(SteeringAngle) - Ffy * sin(SteeringAngle);
+		double Fx = Fdrv - Frrr - Fbr - Frrf * cos(SteeringAngle) - Fbf * cos(SteeringAngle) - Ffy * sin(SteeringAngle) + (m * vy * r);
 		return Fx / m;
 	};
 	double ay(double Throttle, double SteeringAngle, double brakes) {
-		double af;
+		double af ;
 		if (vx != 0) { af = abs((lf * r - vx) / vx); }
-		else { af = 0; };
+		else { af = 0; }; 
 		double ar;
 		if (vx != 0) { ar = abs((lr * r - vx) / vx); }
-		else { ar = 0; };
+		else { ar = 0; }; 
 		double Ffy = Cx * af; 
 		double Fry = Cx * ar; 
 		double Frrf = Crr * tanh(vx);
 		double Fbf = brakes * Cbf * tanh(vx);
-		double Fy = Fry + Ffy * cos(SteeringAngle) - Frrf * sin(SteeringAngle) - Fbf * sin(SteeringAngle);
+		double Fy = Fry + Ffy * cos(SteeringAngle) - Frrf * sin(SteeringAngle) - Fbf * sin(SteeringAngle) - (m * vx * r);
 		return Fy / m;
 	};
-	double az(double Throttle, double SteeringAngle, double brakes) {
+	double aw(double Throttle, double SteeringAngle, double brakes) {
 		double af;
 		if (vx != 0) { af = abs((lf * r - vx) / vx); }
 		else { af = 0; };
@@ -73,7 +73,7 @@ public:
 		double Fry = Cx * ar; 
 		double Frrf = Crr * tanh(vx);
 		double Fbf = brakes * Cbf * tanh(vx);
-		double M = Ffy * lf * cos(SteeringAngle) - Frrf * lf * sin(SteeringAngle) - Fbf * lf * sin(SteeringAngle) - Fry * lr; //сумма моментов вращения
+		double M = (Ffy * lf * cos(SteeringAngle))  - (Fry * lr); 
 		return M / lz;
 	};
 	void MoveCar(double Throttle, double SteeringAngle, double brakes) {
@@ -83,7 +83,7 @@ public:
 		yaw = yaw + dt * r;
 		vx = vx + dt * ax(Throttle, SteeringAngle, brakes);
 		vy = vy + dt * ay(Throttle, SteeringAngle, brakes);
-		r = r + dt * az(Throttle, SteeringAngle, brakes);
+		r = r + dt * aw(Throttle, SteeringAngle, brakes);
 	};
 	void printFields() {
 		cout << "" << X << " " << Y << " " << yaw << " " << vx << " " << vy << " " << r << endl;
@@ -103,14 +103,18 @@ int main() {
 		getline(ss, s1, ' ');
 		getline(ss, s2, ' ');
 		getline(ss, s3, ' ');
-		for (int j = 0; i < (0.05 / 0.001); i++) {
+		for (int j = 0; j < (0.05 / 0.001); j++) {
 			MyCar.MoveCar(stod(s1), stod(s2), stod(s3));
-		};
+		}; 
+		//MyCar.printFields();
 	};
-
+	cout << endl;
 	MyCar.printFields();
 
 	file.close();
 
 	return 0;
 }
+
+
+// 66.9337 21.9008 -5149.45 433.787 -45.9092 -1815.59
