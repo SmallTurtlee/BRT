@@ -42,7 +42,7 @@ public:
 		double Frrf = Crr * tanh(vx);
 		double Fdrag = Cd * vx * vx;
 		double af;
-		if (vx != 0) {af = atan((vy + lf * r) / vx) - SteeringAngle; } 
+		if (vx != 0) { af = atan((vy + lf * r) / vx) - SteeringAngle; } 
 		else { af = 0; };
 		double Ffy = Cx * af;
 		double Fx = Fdrv - Fdrag - Frrr - Fbr - Frrf * cos(SteeringAngle) - Fbf * cos(SteeringAngle) - Ffy * sin(SteeringAngle) + (m * vy * r);
@@ -50,10 +50,10 @@ public:
 	};
 	double ay(double Throttle, double SteeringAngle, double brakes) {
 		double af ;
-		if (vx != 0) { af = abs((lf * r - vx) / vx); }
+		if (vx != 0) { af = atan((vy + lf * r) / vx) - SteeringAngle; }
 		else { af = 0; }; 
 		double ar;
-		if (vx != 0) { ar = abs((lr * r - vx) / vx); }
+		if (vx != 0) { ar = atan(((vy - lr * r) / vx)); }
 		else { ar = 0; }; 
 		double Ffy = Cx * af; 
 		double Fry = Cx * ar; 
@@ -64,18 +64,14 @@ public:
 	};
 	double aw(double Throttle, double SteeringAngle, double brakes) {
 		double af;
-		if (vx != 0) { af = abs((lf * r - vx) / vx); }
+		if (vx != 0) { af = atan((vy + lf * r) / vx) - SteeringAngle; }
 		else { af = 0; };
 		double ar;
-		if (vx != 0) { ar = abs((lr * r - vx) / vx); }
+		if (vx != 0) { ar = atan(((vy - lr * r) / vx)); }
 		else { ar = 0; };
 		double Ffy = Cx * af;
 		double Fry = Cx * ar; 
-		//double Frrf = Crr * tanh(vx);
-		//double Fbf = brakes * Cbf * tanh(vx);
-		//double M = Ffy * lf * cos(SteeringAngle) - Frrf * lf * sin(SteeringAngle) - Fbf * lf * sin(SteeringAngle) - Fry * lr; 
 		double M = (Ffy * lf * cos(SteeringAngle))  - (Fry * lr); 
-		//cout << M << endl << M1 << endl << endl;
 		return M / lz;
 	};
 	void MoveCar(double Throttle, double SteeringAngle, double brakes) {
@@ -108,10 +104,9 @@ int main() {
 		for (int j = 0; j < (0.05 / 0.001); j++) {
 			MyCar.MoveCar(stod(s1), stod(s2), stod(s3));
 		}; 
-		MyCar.printFields();
 	};
 	cout << endl;
-	//MyCar.printFields();
+	MyCar.printFields();
 
 	file.close();
 
