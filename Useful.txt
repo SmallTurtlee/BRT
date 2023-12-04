@@ -1,0 +1,11 @@
+std::stoi    // string to int
+std::stol    // string to long
+std::stoll   // string to long long
+std::stof    // string to float
+std::stod    // string to double
+std::stold   // string to long double
+
+
+https://brt-driverless.jetbrains.space/p/knowledge/documents/folders?d=4d8WfN2UMDoQ
+
+тут полезные ссылки по теории движения
